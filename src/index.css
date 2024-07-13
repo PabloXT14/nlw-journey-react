@@ -7,5 +7,9 @@
 }
 
 body {
-  @apply antialiased;
+  @apply bg-zinc-950 text-zinc-50 antialiased;
+}
+
+input, textarea {
+  @apply outline-none;
 }
