@@ -11,8 +11,11 @@ import {
   LuUserPlus2,
   LuX,
 } from 'react-icons/lu'
+import { useNavigate } from 'react-router-dom'
 
 export function CreateTripPage() {
+  const navigate = useNavigate()
+
   const [isGuestsInputOpen, setIsGuestsInputOpen] = useState(false)
   const [isGuestsModalOpen, setIsGuestsModalOpen] = useState(false)
   const [emailsToInvite, setEmailsToInvite] = useState([
@@ -71,6 +74,12 @@ export function CreateTripPage() {
     )
 
     setEmailsToInvite(newEmailList)
+  }
+
+  function createTrip(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+
+    navigate('/trips/1')
   }
 
   return (
@@ -264,7 +273,7 @@ export function CreateTripPage() {
               </p>
             </div>
 
-            <form onSubmit={addNewEmailToInvite} className="space-y-3">
+            <form onSubmit={createTrip} className="space-y-3">
               <div className="flex h-14 flex-1 items-center gap-2 rounded-lg border border-zinc-800 bg-zinc-950 px-5">
                 <LuUser className="size-5 text-zinc-400" />
 
