@@ -12,4 +12,5 @@ body {
 
 input, textarea {
   @apply outline-none;
+  color-scheme: dark;
 }

@@ -1,3 +1,4 @@
+import { FormEvent, useState } from 'react'
 import {
   LuCalendar,
   LuCheckCircle2,
@@ -6,10 +7,27 @@ import {
   LuMapPin,
   LuPlus,
   LuSettings2,
+  LuTag,
   LuUserCog,
+  LuX,
 } from 'react-icons/lu'
 
 export function TripDetailsPage() {
+  const [isCreateActivityModalOpen, setIsCreateActivityModalOpen] =
+    useState(false)
+
+  function openCreateActivityModal() {
+    setIsCreateActivityModalOpen(true)
+  }
+
+  function closeCreateActivityModal() {
+    setIsCreateActivityModalOpen(false)
+  }
+
+  function createActivity(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+  }
+
   return (
     <div className="mx-auto max-w-6xl space-y-8 px-6 py-10">
       {/* Header */}
@@ -44,7 +62,10 @@ export function TripDetailsPage() {
           <div className="flex items-center justify-between">
             <h2 className="text-3xl font-semibold">Atividades</h2>
 
-            <button className="flex items-center gap-2 rounded-lg bg-lime-300 px-5 py-2 font-medium text-lime-950 transition-colors hover:bg-lime-400">
+            <button
+              onClick={openCreateActivityModal}
+              className="flex items-center gap-2 rounded-lg bg-lime-300 px-5 py-2 font-medium text-lime-950 transition-colors hover:bg-lime-400"
+            >
               <LuPlus className="size-5" />
               Cadastrar atividade
             </button>
@@ -140,11 +161,11 @@ export function TripDetailsPage() {
 
           <div className="h-px w-full bg-zinc-800" />
 
-          {/* Guest list */}
+          {/* Guests */}
           <div className="space-y-6">
             <h2 className="text-xl font-semibold">Convidados</h2>
 
-            {/* Links list */}
+            {/* Guest list */}
             <div className="space-y-5">
               <div className="flex items-center justify-between gap-4">
                 <div className="space-y-1.5">
@@ -178,6 +199,62 @@ export function TripDetailsPage() {
           </div>
         </div>
       </main>
+
+      {/* Create activity modal */}
+      {isCreateActivityModalOpen && (
+        // Overlay
+        <div className="items fixed inset-0 flex items-center justify-center bg-black/60">
+          {/* Modal */}
+          <div className="w-full max-w-[640px] space-y-5 rounded-xl bg-zinc-900 px-6 py-5 shadow-shape">
+            {/* Header */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <h2 className="text-lg font-semibold">Cadastrar a atividade</h2>
+                <button
+                  onClick={closeCreateActivityModal}
+                  className="text-zinc-400"
+                >
+                  <LuX className="size-5" />
+                </button>
+              </div>
+
+              <p className="text-sm text-zinc-400">
+                Todos os convidados podem visualizar as atividades
+              </p>
+            </div>
+
+            <form onSubmit={createActivity} className="space-y-3">
+              <div className="flex h-14 flex-1 items-center gap-2 rounded-lg border border-zinc-800 bg-zinc-950 px-5">
+                <LuTag className="size-5 text-zinc-400" />
+
+                <input
+                  name="title"
+                  placeholder="Qual a atividade?"
+                  className="flex-1 bg-transparent text-lg placeholder-zinc-400"
+                />
+              </div>
+
+              <div className="flex h-14 flex-1 items-center gap-2 rounded-lg border border-zinc-800 bg-zinc-950 px-5">
+                <LuCalendar className="size-5 text-zinc-400" />
+
+                <input
+                  type="datetime-local"
+                  name="occurs_at"
+                  placeholder="Data e horário da atividade"
+                  className="flex-1 bg-transparent text-lg placeholder-zinc-400"
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-lime-300 px-5 font-medium text-lime-950 transition-colors hover:bg-lime-400"
+              >
+                Salvar atividade
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
