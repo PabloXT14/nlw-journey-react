@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { FormEvent, useState } from 'react'
 import {
   LuArrowRight,
   LuAtSign,
@@ -13,6 +13,10 @@ import {
 export function App() {
   const [isGuestsInputOpen, setIsGuestsInputOpen] = useState(false)
   const [isGuestsModalOpen, setIsGuestsModalOpen] = useState(false)
+  const [emailsToInvite, setEmailsToInvite] = useState([
+    'johndoe@example.com',
+    'marydoe@example.com',
+  ])
 
   function openGuestsInput() {
     setIsGuestsInputOpen(true)
@@ -28,6 +32,33 @@ export function App() {
 
   function closeGuestsModal() {
     setIsGuestsModalOpen(false)
+  }
+
+  function addNewEmailToInvite(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+
+    const data = new FormData(event.currentTarget)
+    const email = data.get('email')?.toString()
+
+    if (!email) {
+      return
+    }
+
+    if (emailsToInvite.includes(email)) {
+      return
+    }
+
+    setEmailsToInvite([...emailsToInvite, email])
+
+    event.currentTarget.reset()
+  }
+
+  function removeEmailFromInvite(emailToRemove: string) {
+    const newEmailList = emailsToInvite.filter(
+      (email) => email !== emailToRemove,
+    )
+
+    setEmailsToInvite(newEmailList)
   }
 
   return (
@@ -137,23 +168,29 @@ export function App() {
             </div>
 
             <div className="flex flex-wrap gap-2">
-              <div className="flex items-center gap-2 rounded-md bg-zinc-800 px-2.5 py-1.5">
-                <span className="text-zinc-300">jhondoe@example.com</span>
-                <button type="button" className="text-zinc-400">
-                  <LuX className="size-4" />
-                </button>
-              </div>
-              <div className="flex items-center gap-2 rounded-md bg-zinc-800 px-2.5 py-1.5">
-                <span className="text-zinc-300">jhondoe@example.com</span>
-                <button type="button" className="text-zinc-400">
-                  <LuX className="size-4" />
-                </button>
-              </div>
+              {emailsToInvite.map((email) => (
+                <div
+                  key={email}
+                  className="flex items-center gap-2 rounded-md bg-zinc-800 px-2.5 py-1.5"
+                >
+                  <span className="text-zinc-300">{email}</span>
+                  <button
+                    type="button"
+                    onClick={() => removeEmailFromInvite(email)}
+                    className="text-zinc-400"
+                  >
+                    <LuX className="size-4" />
+                  </button>
+                </div>
+              ))}
             </div>
 
             <div className="h-px w-full bg-zinc-800" />
 
-            <form className="flex items-center gap-2 rounded-lg border border-zinc-800 bg-zinc-950 p-2.5">
+            <form
+              onSubmit={addNewEmailToInvite}
+              className="flex items-center gap-2 rounded-lg border border-zinc-800 bg-zinc-950 p-2.5"
+            >
               <div className="flex flex-1 items-center gap-2 px-2">
                 <LuAtSign className="size-5 text-zinc-400" />
 
