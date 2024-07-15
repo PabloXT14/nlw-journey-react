@@ -13,19 +13,22 @@ import { format } from 'date-fns'
 
 type InviteGuestsModalProps = {
   isGuestsInputOpen: boolean
+  eventStartAndEndDates: DateRange | undefined
   closeGuestsInput: () => void
   openGuestsInput: () => void
+  setDestination: (destination: string) => void
+  setEventStartAndEndDates: (dates: DateRange | undefined) => void
 }
 
 export const DestinationAndDateStep = ({
   isGuestsInputOpen,
+  eventStartAndEndDates,
   closeGuestsInput,
   openGuestsInput,
+  setDestination,
+  setEventStartAndEndDates,
 }: InviteGuestsModalProps) => {
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false)
-  const [eventStartAndEndDates, setEventStartAndEndDates] = useState<
-    DateRange | undefined
-  >()
 
   function openDatePicker() {
     setIsDatePickerOpen(true)
@@ -49,6 +52,7 @@ export const DestinationAndDateStep = ({
       <div className="flex flex-1 items-center gap-2">
         <LuMapPin className="size-5 text-zinc-400" />
         <input
+          onChange={(e) => setDestination(e.target.value)}
           disabled={isGuestsInputOpen}
           type="text"
           placeholder="Para onde você vai?"
