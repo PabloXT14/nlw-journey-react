@@ -1,4 +1,5 @@
 import { LuMapPin, LuCalendar, LuSettings2 } from 'react-icons/lu'
+import { Button } from '../../components/button'
 
 export const DestinationAndDateHeader = () => {
   return (
@@ -18,10 +19,10 @@ export const DestinationAndDateHeader = () => {
 
         <div className="h-6 w-px bg-zinc-800" />
 
-        <button className="flex items-center gap-2 rounded-lg bg-zinc-800 px-5 py-2 font-medium text-zinc-200 transition-colors hover:bg-zinc-700">
+        <Button variant="secondary">
           Alterar local/data
           <LuSettings2 className="size-5" />
-        </button>
+        </Button>
       </div>
     </div>
   )

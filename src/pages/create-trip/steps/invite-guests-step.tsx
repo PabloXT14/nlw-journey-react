@@ -1,4 +1,5 @@
 import { LuArrowRight, LuUserPlus2 } from 'react-icons/lu'
+import { Button } from '../../../components/button'
 
 type InviteGuestsModalProps = {
   openGuestsModal: () => void
@@ -32,13 +33,10 @@ export const InviteGuestsStep = ({
 
       <div className="h-6 w-px bg-zinc-800" />
 
-      <button
-        onClick={openConfirmTripModal}
-        className="flex items-center gap-2 rounded-lg bg-lime-300 px-5 py-2 font-medium text-lime-950 transition-colors hover:bg-lime-400"
-      >
+      <Button onClick={openConfirmTripModal}>
         Confirmar viagem
         <LuArrowRight className="size-5" />
-      </button>
+      </Button>
     </div>
   )
 }

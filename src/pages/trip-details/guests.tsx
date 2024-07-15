@@ -1,4 +1,5 @@
 import { LuCircleDashed, LuUserCog } from 'react-icons/lu'
+import { Button } from '../../components/button'
 
 export const Guests = () => {
   return (
@@ -32,10 +33,10 @@ export const Guests = () => {
         </div>
       </div>
 
-      <button className="flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-zinc-800 px-5 font-medium text-zinc-200 transition-colors hover:bg-zinc-700">
+      <Button variant="secondary" size="full">
         <LuUserCog className="size-5" />
         Gerenciar convidados
-      </button>
+      </Button>
     </div>
   )
 }

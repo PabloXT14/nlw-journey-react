@@ -1,5 +1,6 @@
 import { FormEvent } from 'react'
 import { LuAtSign, LuPlus, LuX } from 'react-icons/lu'
+import { Button } from '../../components/button'
 
 type InviteGuestsModalProps = {
   closeGuestsModal: () => void
@@ -66,13 +67,10 @@ export const InviteGuestsModal = ({
             />
           </div>
 
-          <button
-            type="submit"
-            className="flex items-center gap-2 rounded-lg bg-lime-300 px-5 py-2 font-medium text-lime-950 transition-colors hover:bg-lime-400"
-          >
+          <Button type="submit">
             Convidar
             <LuPlus className="size-5" />
-          </button>
+          </Button>
         </form>
       </div>
     </div>

@@ -1,5 +1,6 @@
 import { FormEvent } from 'react'
 import { LuMail, LuUser, LuX } from 'react-icons/lu'
+import { Button } from '../../components/button'
 
 type ConfirmTripModalProps = {
   closeConfirmTripModal: () => void
@@ -58,12 +59,9 @@ export const ConfirmTripModal = ({
             />
           </div>
 
-          <button
-            type="submit"
-            className="flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-lime-300 px-5 font-medium text-lime-950 transition-colors hover:bg-lime-400"
-          >
+          <Button type="submit" size="full">
             Confirmar criação da viagem
-          </button>
+          </Button>
         </form>
       </div>
     </div>

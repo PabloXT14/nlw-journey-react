@@ -1,4 +1,5 @@
 import { LuLink2, LuPlus } from 'react-icons/lu'
+import { Button } from '../../components/button'
 
 export const ImportanteLinks = () => {
   return (
@@ -38,10 +39,10 @@ export const ImportanteLinks = () => {
         </div>
       </div>
 
-      <button className="flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-zinc-800 px-5 font-medium text-zinc-200 transition-colors hover:bg-zinc-700">
+      <Button variant="secondary" size="full">
         <LuPlus className="size-5" />
         Cadastrar novo link
-      </button>
+      </Button>
     </div>
   )
 }

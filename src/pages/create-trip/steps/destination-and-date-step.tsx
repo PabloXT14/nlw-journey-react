@@ -1,4 +1,5 @@
 import { LuArrowRight, LuCalendar, LuMapPin, LuSettings2 } from 'react-icons/lu'
+import { Button } from '../../../components/button'
 
 type InviteGuestsModalProps = {
   isGuestsInputOpen: boolean
@@ -36,21 +37,15 @@ export const DestinationAndDateStep = ({
       <div className="h-6 w-px bg-zinc-800" />
 
       {isGuestsInputOpen ? (
-        <button
-          onClick={closeGuestsInput}
-          className="flex items-center gap-2 rounded-lg bg-zinc-800 px-5 py-2 font-medium text-zinc-200 transition-colors hover:bg-zinc-700"
-        >
+        <Button onClick={closeGuestsInput} variant="secondary">
           Alterar local/data
           <LuSettings2 className="size-5" />
-        </button>
+        </Button>
       ) : (
-        <button
-          onClick={openGuestsInput}
-          className="flex items-center gap-2 rounded-lg bg-lime-300 px-5 py-2 font-medium text-lime-950 transition-colors hover:bg-lime-400"
-        >
+        <Button onClick={openGuestsInput}>
           Continuar
           <LuArrowRight className="size-5" />
-        </button>
+        </Button>
       )}
     </div>
   )
