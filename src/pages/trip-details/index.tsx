@@ -1,4 +1,4 @@
-import { FormEvent, useState } from 'react'
+import { useState } from 'react'
 import { LuPlus } from 'react-icons/lu'
 import { CreateActivityModal } from './create-activity-modal'
 import { ImportanteLinks } from './important-links'
@@ -17,10 +17,6 @@ export function TripDetailsPage() {
 
   function closeCreateActivityModal() {
     setIsCreateActivityModalOpen(false)
-  }
-
-  function createActivity(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault()
   }
 
   return (
@@ -60,7 +56,6 @@ export function TripDetailsPage() {
       {isCreateActivityModalOpen && (
         <CreateActivityModal
           closeCreateActivityModal={closeCreateActivityModal}
-          createActivity={createActivity}
         />
       )}
     </div>

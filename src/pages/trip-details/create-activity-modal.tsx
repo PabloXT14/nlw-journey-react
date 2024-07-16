@@ -1,16 +1,40 @@
 import { FormEvent } from 'react'
 import { LuCalendar, LuTag, LuX } from 'react-icons/lu'
 import { Button } from '../../components/button'
+import { api } from '../../lib/axios'
+import { useParams } from 'react-router-dom'
 
 type CreateActivityModalProps = {
   closeCreateActivityModal: () => void
-  createActivity: (event: FormEvent<HTMLFormElement>) => void
 }
 
 export const CreateActivityModal = ({
   closeCreateActivityModal,
-  createActivity,
 }: CreateActivityModalProps) => {
+  const { tripId } = useParams()
+
+  async function createActivity(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+
+    const data = new FormData(event.currentTarget)
+
+    const title = data.get('title')?.toString()
+    const occurs_at = data.get('occurs_at')?.toString()
+
+    if (!title || !occurs_at) {
+      return
+    }
+
+    await api.post(`/trips/${tripId}/activities`, {
+      title,
+      occurs_at,
+    })
+
+    alert('Atividade criada com sucesso!')
+
+    closeCreateActivityModal()
+  }
+
   return (
     // Overlay
     <div className="items fixed inset-0 flex items-center justify-center bg-black/60">
