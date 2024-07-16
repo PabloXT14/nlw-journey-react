@@ -32,7 +32,7 @@ export const CreateActivityModal = ({
 
     alert('Atividade criada com sucesso!')
 
-    closeCreateActivityModal()
+    window.location.reload()
   }
 
   return (
