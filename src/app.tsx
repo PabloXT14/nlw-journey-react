@@ -1,8 +1,10 @@
+import { QueryClientProvider } from '@tanstack/react-query'
+import { ptBR } from 'date-fns/locale'
+import { setDefaultOptions } from 'date-fns/setDefaultOptions'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { queryClient } from './lib/react-query'
 import { CreateTripPage } from './pages/create-trip'
 import { TripDetailsPage } from './pages/trip-details'
-import { setDefaultOptions } from 'date-fns/setDefaultOptions'
-import { ptBR } from 'date-fns/locale'
 
 setDefaultOptions({ locale: ptBR })
 
@@ -18,5 +20,9 @@ const router = createBrowserRouter([
 ])
 
 export function App() {
-  return <RouterProvider router={router} />
+  return (
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+    </QueryClientProvider>
+  )
 }
