@@ -1,17 +1,16 @@
 import { LuArrowRight, LuUserPlus2 } from 'react-icons/lu'
 import { Button } from '../../../components/button'
+import { useModalStore } from '../../../store/modal'
 
 type InviteGuestsModalProps = {
-  openGuestsModal: () => void
   emailsToInvite: string[]
-  openConfirmTripModal: () => void
 }
 
 export const InviteGuestsStep = ({
-  openConfirmTripModal,
   emailsToInvite,
-  openGuestsModal,
 }: InviteGuestsModalProps) => {
+  const { openGuestsModal, openConfirmTripModal } = useModalStore()
+
   return (
     <div className="flex h-16 items-center gap-3 rounded-xl bg-zinc-900 px-4 shadow-shape">
       <button

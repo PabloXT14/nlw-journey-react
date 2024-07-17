@@ -10,24 +10,22 @@ import { useState } from 'react'
 import 'react-day-picker/dist/style.css'
 import { DateRange, DayPicker } from 'react-day-picker'
 import { format } from 'date-fns'
+import { useModalStore } from '../../../store/modal'
 
 type InviteGuestsModalProps = {
-  isGuestsInputOpen: boolean
   eventStartAndEndDates: DateRange | undefined
-  closeGuestsInput: () => void
-  openGuestsInput: () => void
   setDestination: (destination: string) => void
   setEventStartAndEndDates: (dates: DateRange | undefined) => void
 }
 
 export const DestinationAndDateStep = ({
-  isGuestsInputOpen,
   eventStartAndEndDates,
-  closeGuestsInput,
-  openGuestsInput,
   setDestination,
   setEventStartAndEndDates,
 }: InviteGuestsModalProps) => {
+  const { isGuestsInputOpen, openGuestsInput, closeGuestsInput } =
+    useModalStore()
+
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false)
 
   function openDatePicker() {

@@ -6,13 +6,14 @@ import { DestinationAndDateStep } from './steps/destination-and-date-step'
 import { InviteGuestsStep } from './steps/invite-guests-step'
 import { DateRange } from 'react-day-picker'
 import { api } from '../../lib/axios'
+import { useModalStore } from '../../store/modal'
 
 export function CreateTripPage() {
   const navigate = useNavigate()
 
-  const [isGuestsInputOpen, setIsGuestsInputOpen] = useState(false)
-  const [isGuestsModalOpen, setIsGuestsModalOpen] = useState(false)
-  const [isConfirmTripModalOpen, setIsConfirmTripModalOpen] = useState(false)
+  const { isGuestsInputOpen, isConfirmTripModalOpen, isGuestsModalOpen } =
+    useModalStore()
+
   const [emailsToInvite, setEmailsToInvite] = useState([
     'johndoe@example.com',
     'marydoe@example.com',
@@ -24,30 +25,6 @@ export function CreateTripPage() {
   const [eventStartAndEndDates, setEventStartAndEndDates] = useState<
     DateRange | undefined
   >()
-
-  function openGuestsInput() {
-    setIsGuestsInputOpen(true)
-  }
-
-  function closeGuestsInput() {
-    setIsGuestsInputOpen(false)
-  }
-
-  function openGuestsModal() {
-    setIsGuestsModalOpen(true)
-  }
-
-  function closeGuestsModal() {
-    setIsGuestsModalOpen(false)
-  }
-
-  function openConfirmTripModal() {
-    setIsConfirmTripModalOpen(true)
-  }
-
-  function closeConfirmTripModal() {
-    setIsConfirmTripModalOpen(false)
-  }
 
   function addNewEmailToInvite(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -121,20 +98,13 @@ export function CreateTripPage() {
 
         <div className="space-y-4">
           <DestinationAndDateStep
-            isGuestsInputOpen={isGuestsInputOpen}
             eventStartAndEndDates={eventStartAndEndDates}
-            closeGuestsInput={closeGuestsInput}
-            openGuestsInput={openGuestsInput}
             setDestination={setDestination}
             setEventStartAndEndDates={setEventStartAndEndDates}
           />
 
           {isGuestsInputOpen && (
-            <InviteGuestsStep
-              openConfirmTripModal={openConfirmTripModal}
-              emailsToInvite={emailsToInvite}
-              openGuestsModal={openGuestsModal}
-            />
+            <InviteGuestsStep emailsToInvite={emailsToInvite} />
           )}
         </div>
 
@@ -153,7 +123,6 @@ export function CreateTripPage() {
       </div>
       {isGuestsModalOpen && (
         <InviteGuestsModal
-          closeGuestsModal={closeGuestsModal}
           addNewEmailToInvite={addNewEmailToInvite}
           emailsToInvite={emailsToInvite}
           removeEmailFromInvite={removeEmailFromInvite}
@@ -162,7 +131,6 @@ export function CreateTripPage() {
 
       {isConfirmTripModalOpen && (
         <ConfirmTripModal
-          closeConfirmTripModal={closeConfirmTripModal}
           createTrip={createTrip}
           setOwnerName={setOwnerName}
           setOwnerEmail={setOwnerEmail}

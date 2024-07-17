@@ -1,20 +1,21 @@
 import { FormEvent } from 'react'
 import { LuMail, LuUser, LuX } from 'react-icons/lu'
 import { Button } from '../../components/button'
+import { useModalStore } from '../../store/modal'
 
 type ConfirmTripModalProps = {
-  closeConfirmTripModal: () => void
   createTrip: (event: FormEvent<HTMLFormElement>) => void
   setOwnerName: (name: string) => void
   setOwnerEmail: (email: string) => void
 }
 
 export const ConfirmTripModal = ({
-  closeConfirmTripModal,
   createTrip,
   setOwnerName,
   setOwnerEmail,
 }: ConfirmTripModalProps) => {
+  const { closeConfirmTripModal } = useModalStore()
+
   return (
     <div className="items fixed inset-0 flex items-center justify-center bg-black/60">
       <div className="w-full max-w-[640px] space-y-5 rounded-xl bg-zinc-900 px-6 py-5 shadow-shape">

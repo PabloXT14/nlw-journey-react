@@ -29,8 +29,12 @@ export const Activities = () => {
       {activities?.map((activityDay) => (
         <div key={activityDay.date} className="space-y-2.5">
           <div className="flex items-baseline gap-2">
-            <span className="text-xl font-semibold text-zinc-300">Dia {format(activityDay.date, 'd')}</span>
-            <span className="text-xs text-zinc-500">{format(activityDay.date, 'EEEE')}</span>
+            <span className="text-xl font-semibold text-zinc-300">
+              Dia {format(activityDay.date, 'd')}
+            </span>
+            <span className="text-xs text-zinc-500">
+              {format(activityDay.date, 'EEEE')}
+            </span>
           </div>
           {activityDay.activities.length > 0 ? (
             <div className="space-y-2.5">
