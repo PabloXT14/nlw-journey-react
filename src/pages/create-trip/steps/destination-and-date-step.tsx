@@ -12,13 +12,18 @@ import { DayPicker } from 'react-day-picker'
 import { format } from 'date-fns'
 import { useModalStore } from '../../../store/modal'
 import { useCreateTripStore } from '../../../store/create-trip'
+import { toast } from 'sonner'
 
 export const DestinationAndDateStep = () => {
   const { isGuestsInputOpen, openGuestsInput, closeGuestsInput } =
     useModalStore()
 
-  const { eventStartAndEndDates, setEventStartAndEndDates, setDestination } =
-    useCreateTripStore()
+  const {
+    eventStartAndEndDates,
+    setEventStartAndEndDates,
+    setDestination,
+    destination,
+  } = useCreateTripStore()
 
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false)
 
@@ -28,6 +33,26 @@ export const DestinationAndDateStep = () => {
 
   function closeDatePicker() {
     setIsDatePickerOpen(false)
+  }
+
+  function handleOpenGuestsInput() {
+    if (!destination) {
+      return toast.error('Por favor, preencha o campo de destino')
+    }
+
+    if (
+      !eventStartAndEndDates ||
+      !eventStartAndEndDates.from ||
+      !eventStartAndEndDates.to
+    ) {
+      return toast.error('Por favor, preencha o campo de data')
+    }
+
+    if (eventStartAndEndDates.from < new Date()) {
+      return toast.error('A data inicial deve ser posterior a data atual')
+    }
+
+    openGuestsInput()
   }
 
   const displayedDate =
@@ -71,7 +96,7 @@ export const DestinationAndDateStep = () => {
           <LuSettings2 className="size-5" />
         </Button>
       ) : (
-        <Button onClick={openGuestsInput}>
+        <Button onClick={handleOpenGuestsInput}>
           Continuar
           <LuArrowRight className="size-5" />
         </Button>
