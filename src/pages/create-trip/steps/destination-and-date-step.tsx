@@ -8,23 +8,17 @@ import {
 import { Button } from '../../../components/button'
 import { useState } from 'react'
 import 'react-day-picker/dist/style.css'
-import { DateRange, DayPicker } from 'react-day-picker'
+import { DayPicker } from 'react-day-picker'
 import { format } from 'date-fns'
 import { useModalStore } from '../../../store/modal'
+import { useCreateTripStore } from '../../../store/create-trip'
 
-type InviteGuestsModalProps = {
-  eventStartAndEndDates: DateRange | undefined
-  setDestination: (destination: string) => void
-  setEventStartAndEndDates: (dates: DateRange | undefined) => void
-}
-
-export const DestinationAndDateStep = ({
-  eventStartAndEndDates,
-  setDestination,
-  setEventStartAndEndDates,
-}: InviteGuestsModalProps) => {
+export const DestinationAndDateStep = () => {
   const { isGuestsInputOpen, openGuestsInput, closeGuestsInput } =
     useModalStore()
+
+  const { eventStartAndEndDates, setEventStartAndEndDates, setDestination } =
+    useCreateTripStore()
 
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false)
 

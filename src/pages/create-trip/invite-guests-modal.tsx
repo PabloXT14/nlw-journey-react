@@ -2,19 +2,38 @@ import { FormEvent } from 'react'
 import { LuAtSign, LuPlus, LuX } from 'react-icons/lu'
 import { Button } from '../../components/button'
 import { useModalStore } from '../../store/modal'
+import { useCreateTripStore } from '../../store/create-trip'
 
-type InviteGuestsModalProps = {
-  emailsToInvite: string[]
-  removeEmailFromInvite: (email: string) => void
-  addNewEmailToInvite: (event: FormEvent<HTMLFormElement>) => void
-}
-
-export const InviteGuestsModal = ({
-  emailsToInvite,
-  removeEmailFromInvite,
-  addNewEmailToInvite,
-}: InviteGuestsModalProps) => {
+export const InviteGuestsModal = () => {
   const { closeGuestsModal } = useModalStore()
+  const { emailsToInvite, setEmailsToInvite } = useCreateTripStore()
+
+  function addNewEmailToInvite(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+
+    const data = new FormData(event.currentTarget)
+    const email = data.get('email')?.toString()
+
+    if (!email) {
+      return
+    }
+
+    if (emailsToInvite.includes(email)) {
+      return
+    }
+
+    setEmailsToInvite([...emailsToInvite, email])
+
+    event.currentTarget.reset()
+  }
+
+  function removeEmailFromInvite(emailToRemove: string) {
+    const newEmailList = emailsToInvite.filter(
+      (email) => email !== emailToRemove,
+    )
+
+    setEmailsToInvite(newEmailList)
+  }
 
   return (
     <div className="items fixed inset-0 flex items-center justify-center bg-black/60">

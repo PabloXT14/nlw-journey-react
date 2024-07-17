@@ -2,19 +2,66 @@ import { FormEvent } from 'react'
 import { LuMail, LuUser, LuX } from 'react-icons/lu'
 import { Button } from '../../components/button'
 import { useModalStore } from '../../store/modal'
+import { useNavigate } from 'react-router-dom'
+import { api } from '../../lib/axios'
+import { useCreateTripStore } from '../../store/create-trip'
+import { format } from 'date-fns'
 
-type ConfirmTripModalProps = {
-  createTrip: (event: FormEvent<HTMLFormElement>) => void
-  setOwnerName: (name: string) => void
-  setOwnerEmail: (email: string) => void
-}
+export const ConfirmTripModal = () => {
+  const navigate = useNavigate()
 
-export const ConfirmTripModal = ({
-  createTrip,
-  setOwnerName,
-  setOwnerEmail,
-}: ConfirmTripModalProps) => {
   const { closeConfirmTripModal } = useModalStore()
+  const {
+    destination,
+    eventStartAndEndDates,
+    emailsToInvite,
+    ownerName,
+    ownerEmail,
+    setOwnerName,
+    setOwnerEmail,
+  } = useCreateTripStore()
+
+  async function createTrip(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+
+    if (!destination) {
+      return
+    }
+
+    if (!eventStartAndEndDates?.from || !eventStartAndEndDates?.to) {
+      return
+    }
+
+    if (emailsToInvite.length === 0) {
+      return
+    }
+
+    if (!ownerName || !ownerEmail) {
+      return
+    }
+
+    const response = await api.post('/trips', {
+      destination,
+      starts_at: eventStartAndEndDates.from,
+      ends_at: eventStartAndEndDates.to,
+      emails_to_invite: emailsToInvite,
+      owner_name: ownerName,
+      owner_email: ownerEmail,
+    })
+
+    const { tripId } = response.data
+
+    navigate(`/trips/${tripId}`)
+  }
+
+  const displayedDate =
+    eventStartAndEndDates &&
+    eventStartAndEndDates.from &&
+    eventStartAndEndDates.to
+      ? format(eventStartAndEndDates.from, "d' de 'LLL")
+          .concat(' até ')
+          .concat(format(eventStartAndEndDates.to, "d' de 'LLL"))
+      : null
 
   return (
     <div className="items fixed inset-0 flex items-center justify-center bg-black/60">
@@ -31,13 +78,9 @@ export const ConfirmTripModal = ({
 
           <p className="text-sm text-zinc-400">
             Para concluir a criação da viagem para{' '}
-            <span className="font-semibold text-zinc-100">
-              Florianópolis, Brasil
-            </span>{' '}
+            <span className="font-semibold text-zinc-100">{destination}</span>{' '}
             nas datas de{' '}
-            <span className="font-semibold text-zinc-100">
-              16 a 27 de Agosto de 2024
-            </span>{' '}
+            <span className="font-semibold text-zinc-100">{displayedDate}</span>{' '}
             preencha seus dados abaixo:
           </p>
         </div>
