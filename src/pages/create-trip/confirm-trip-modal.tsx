@@ -1,14 +1,16 @@
-import { FormEvent } from 'react'
-import { LuMail, LuUser, LuX } from 'react-icons/lu'
+import { FormEvent, useState } from 'react'
+import { LuLoader2, LuMail, LuUser, LuX } from 'react-icons/lu'
 import { Button } from '../../components/button'
 import { useModalStore } from '../../store/modal'
 import { useNavigate } from 'react-router-dom'
 import { api } from '../../lib/axios'
 import { useCreateTripStore } from '../../store/create-trip'
 import { format } from 'date-fns'
+import { toast } from 'sonner'
 
 export const ConfirmTripModal = () => {
   const navigate = useNavigate()
+  const [isLoading, setIsLoading] = useState(false)
 
   const { closeConfirmTripModal } = useModalStore()
   const {
@@ -32,26 +34,34 @@ export const ConfirmTripModal = () => {
       return
     }
 
-    if (emailsToInvite.length === 0) {
-      return
+    if (!ownerName) {
+      return toast.error('Por favor, preencha o campo de nome')
     }
 
-    if (!ownerName || !ownerEmail) {
-      return
+    if (!ownerEmail) {
+      return toast.error('Por favor, preencha o campo de e-mail')
     }
 
-    const response = await api.post('/trips', {
-      destination,
-      starts_at: eventStartAndEndDates.from,
-      ends_at: eventStartAndEndDates.to,
-      emails_to_invite: emailsToInvite,
-      owner_name: ownerName,
-      owner_email: ownerEmail,
-    })
+    try {
+      setIsLoading(true)
 
-    const { tripId } = response.data
+      const response = await api.post('/trips', {
+        destination,
+        starts_at: eventStartAndEndDates.from,
+        ends_at: eventStartAndEndDates.to,
+        emails_to_invite: emailsToInvite,
+        owner_name: ownerName,
+        owner_email: ownerEmail,
+      })
 
-    navigate(`/trips/${tripId}`)
+      const { tripId } = response.data
+
+      navigate(`/trips/${tripId}`)
+    } catch (error) {
+      toast.error('Erro ao criar viagem')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const displayedDate =
@@ -109,8 +119,12 @@ export const ConfirmTripModal = () => {
             />
           </div>
 
-          <Button type="submit" size="full">
-            Confirmar criação da viagem
+          <Button type="submit" size="full" disabled={isLoading}>
+            {isLoading ? (
+              <LuLoader2 className="size-5 animate-spin" />
+            ) : (
+              'Confirmar criação da viagem'
+            )}
           </Button>
         </form>
       </div>
