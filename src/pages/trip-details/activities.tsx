@@ -1,28 +1,21 @@
-import { useEffect, useState } from 'react'
 import { LuCheckCircle2 } from 'react-icons/lu'
 import { useParams } from 'react-router-dom'
 import { api } from '../../lib/axios'
 import { format } from 'date-fns'
-
-type Activity = {
-  date: string
-  activities: {
-    id: string
-    title: string
-    occurs_at: string
-  }[]
-}
+import { useQuery } from '@tanstack/react-query'
+import { Activity } from '../../types/trip'
 
 export const Activities = () => {
   const { tripId } = useParams()
 
-  const [activities, setActivities] = useState<Activity[]>([])
+  const { data: activities } = useQuery<Activity[]>({
+    queryKey: ['activities', tripId],
+    queryFn: async () => {
+      const { data } = await api.get(`/trips/${tripId}/activities`)
 
-  useEffect(() => {
-    api.get(`/trips/${tripId}/activities`).then((response) => {
-      setActivities(response.data.activities)
-    })
-  }, [tripId])
+      return data.activities
+    },
+  })
 
   return (
     <div className="space-y-8">

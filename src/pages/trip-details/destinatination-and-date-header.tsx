@@ -4,12 +4,19 @@ import { useParams } from 'react-router-dom'
 import { format } from 'date-fns'
 import { useQuery } from '@tanstack/react-query'
 import { Trip } from '../../types/trip'
+import { api } from '../../lib/axios'
 
 export const DestinationAndDateHeader = () => {
   const { tripId } = useParams()
 
+  // eslint-disable-next-line no-empty-pattern
   const { data: trip } = useQuery<Trip>({
     queryKey: ['trip', tripId],
+    queryFn: async () => {
+      const { data } = await api.get(`/trips/${tripId}`)
+
+      return data.trip
+    },
   })
 
   const displayedDate = trip
