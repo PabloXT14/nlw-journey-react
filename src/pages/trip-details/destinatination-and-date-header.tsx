@@ -1,28 +1,16 @@
 import { LuMapPin, LuCalendar, LuSettings2 } from 'react-icons/lu'
 import { Button } from '../../components/button'
 import { useParams } from 'react-router-dom'
-import { useEffect, useState } from 'react'
-import { api } from '../../lib/axios'
 import { format } from 'date-fns'
-
-type Trip = {
-  id: string
-  destination: string
-  starts_at: string
-  ends_at: string
-  is_confirmed: boolean
-}
+import { useQuery } from '@tanstack/react-query'
+import { Trip } from '../../types/trip'
 
 export const DestinationAndDateHeader = () => {
   const { tripId } = useParams()
 
-  const [trip, setTrip] = useState<Trip | undefined>()
-
-  useEffect(() => {
-    api.get(`/trips/${tripId}`).then((response) => {
-      setTrip(response.data.trip)
-    })
-  }, [tripId])
+  const { data: trip } = useQuery<Trip>({
+    queryKey: ['trip', tripId],
+  })
 
   const displayedDate = trip
     ? format(trip.starts_at, "d' de 'LLL")
