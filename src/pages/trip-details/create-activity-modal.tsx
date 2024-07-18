@@ -4,11 +4,18 @@ import { Button } from '../../components/button'
 import { api } from '../../lib/axios'
 import { useParams } from 'react-router-dom'
 import { useModalStore } from '../../store/modal'
+import { toast } from 'sonner'
+import { useQuery } from '@tanstack/react-query'
+import { Trip } from '../../types/trip'
 
 export const CreateActivityModal = () => {
   const { closeCreateActivityModal } = useModalStore()
 
   const { tripId } = useParams()
+
+  const { data: trip } = useQuery<Trip>({
+    queryKey: ['trip'],
+  })
 
   async function createActivity(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -18,8 +25,26 @@ export const CreateActivityModal = () => {
     const title = data.get('title')?.toString()
     const occurs_at = data.get('occurs_at')?.toString()
 
-    if (!title || !occurs_at) {
+    if (!title) {
+      return toast.error('Por favor, preencha o campo de título')
+    }
+
+    if (!occurs_at) {
+      return toast.error('Por favor, preencha o campo de data')
+    }
+
+    if (!trip?.starts_at || !trip?.ends_at) {
+      toast.error('Data da viagem não encontrada')
       return
+    }
+
+    if (
+      new Date(occurs_at) < new Date(trip?.starts_at) ||
+      new Date(occurs_at) > new Date(trip?.ends_at)
+    ) {
+      return toast.error(
+        'A data da atividade deve estar entre a data inicial e a data final da viagem',
+      )
     }
 
     await api.post(`/trips/${tripId}/activities`, {
@@ -27,7 +52,7 @@ export const CreateActivityModal = () => {
       occurs_at,
     })
 
-    alert('Atividade criada com sucesso!')
+    toast.success('Atividade criada com sucesso!')
 
     window.location.reload()
   }
