@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { LuPlus } from 'react-icons/lu'
 import { CreateActivityModal } from './create-activity-modal'
 import { ImportanteLinks } from './important-links'
@@ -6,18 +5,10 @@ import { Guests } from './guests'
 import { Activities } from './activities'
 import { DestinationAndDateHeader } from './destinatination-and-date-header'
 import { Button } from '../../components/button'
+import { useModalStore } from '../../store/modal'
 
 export function TripDetailsPage() {
-  const [isCreateActivityModalOpen, setIsCreateActivityModalOpen] =
-    useState(false)
-
-  function openCreateActivityModal() {
-    setIsCreateActivityModalOpen(true)
-  }
-
-  function closeCreateActivityModal() {
-    setIsCreateActivityModalOpen(false)
-  }
+  const { isCreateActivityModalOpen, openCreateActivityModal } = useModalStore()
 
   return (
     <div className="mx-auto max-w-6xl space-y-8 px-6 py-10">
@@ -53,11 +44,7 @@ export function TripDetailsPage() {
       </main>
 
       {/* Create activity modal */}
-      {isCreateActivityModalOpen && (
-        <CreateActivityModal
-          closeCreateActivityModal={closeCreateActivityModal}
-        />
-      )}
+      {isCreateActivityModalOpen && <CreateActivityModal />}
     </div>
   )
 }

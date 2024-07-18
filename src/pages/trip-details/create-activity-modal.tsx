@@ -3,14 +3,11 @@ import { LuCalendar, LuTag, LuX } from 'react-icons/lu'
 import { Button } from '../../components/button'
 import { api } from '../../lib/axios'
 import { useParams } from 'react-router-dom'
+import { useModalStore } from '../../store/modal'
 
-type CreateActivityModalProps = {
-  closeCreateActivityModal: () => void
-}
+export const CreateActivityModal = () => {
+  const { closeCreateActivityModal } = useModalStore()
 
-export const CreateActivityModal = ({
-  closeCreateActivityModal,
-}: CreateActivityModalProps) => {
   const { tripId } = useParams()
 
   async function createActivity(event: FormEvent<HTMLFormElement>) {
