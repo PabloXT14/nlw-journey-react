@@ -14,3 +14,10 @@ export type Activity = {
     occurs_at: string
   }[]
 }
+
+export type Participant = {
+  id: string
+  name: string | null
+  email: string
+  is_confirmed: boolean
+}

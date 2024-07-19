@@ -1,26 +1,21 @@
 import { LuCheckCircle2, LuCircleDashed, LuUserCog } from 'react-icons/lu'
 import { Button } from '../../components/button'
-import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { api } from '../../lib/axios'
-
-type Participant = {
-  id: string
-  name: string | null
-  email: string
-  is_confirmed: boolean
-}
+import { useQuery } from '@tanstack/react-query'
+import { Participant } from '../../types/trip'
 
 export const Guests = () => {
   const { tripId } = useParams()
 
-  const [participants, setParticipant] = useState<Participant[]>([])
+  const { data: participants } = useQuery<Participant[]>({
+    queryKey: ['participants', tripId],
+    queryFn: async () => {
+      const response = await api.get(`/trips/${tripId}/participants`)
 
-  useEffect(() => {
-    api.get(`/trips/${tripId}/participants`).then((response) => {
-      setParticipant(response.data.participants)
-    })
-  }, [tripId])
+      return response.data.participants
+    },
+  })
 
   return (
     <div className="space-y-6">
@@ -48,18 +43,6 @@ export const Guests = () => {
             )}
           </div>
         ))}
-
-        {/* <div className="flex items-center justify-between gap-4">
-          <div className="space-y-1.5">
-            <span className="block font-medium text-zinc-100">
-              Dr. Rita Pacocha
-            </span>
-            <span className="block truncate text-sm text-zinc-400">
-              dr.rita.pacocha@gmailcom
-            </span>
-          </div>
-          <LuCircleDashed className="size-5 shrink-0 text-zinc-400" />
-        </div> */}
       </div>
 
       <Button variant="secondary" size="full">
