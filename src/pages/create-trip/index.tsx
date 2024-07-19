@@ -5,8 +5,7 @@ import { InviteGuestsStep } from './steps/invite-guests-step'
 import { useModalStore } from '../../store/modal'
 
 export function CreateTripPage() {
-  const { isGuestsInputOpen, isConfirmTripModalOpen, isGuestsModalOpen } =
-    useModalStore()
+  const { isGuestsInputOpen } = useModalStore()
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-squares bg-center bg-no-repeat">
@@ -37,9 +36,9 @@ export function CreateTripPage() {
           .
         </p>
       </div>
-      {isGuestsModalOpen && <InviteGuestsModal />}
+      <InviteGuestsModal />
 
-      {isConfirmTripModalOpen && <ConfirmTripModal />}
+      <ConfirmTripModal />
     </div>
   )
 }

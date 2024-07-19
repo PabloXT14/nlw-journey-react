@@ -1,16 +1,18 @@
+import * as Dialog from '@radix-ui/react-dialog'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { FormEvent } from 'react'
 import { LuCalendar, LuTag, LuX } from 'react-icons/lu'
+import { useParams } from 'react-router-dom'
+import { toast } from 'sonner'
 import { Button } from '../../components/button'
 import { api } from '../../lib/axios'
-import { useParams } from 'react-router-dom'
 import { useModalStore } from '../../store/modal'
-import { toast } from 'sonner'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Trip } from '../../types/trip'
 
 export const CreateActivityModal = () => {
   const queryClient = useQueryClient()
-  const { closeCreateActivityModal } = useModalStore()
+  const { isCreateActivityModalOpen, closeCreateActivityModal } =
+    useModalStore()
 
   const { tripId } = useParams()
 
@@ -74,54 +76,57 @@ export const CreateActivityModal = () => {
   }
 
   return (
-    // Overlay
-    <div className="items fixed inset-0 flex items-center justify-center bg-black/60">
-      {/* Modal */}
-      <div className="w-full max-w-[640px] space-y-5 rounded-xl bg-zinc-900 px-6 py-5 shadow-shape">
-        {/* Header */}
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold">Cadastrar a atividade</h2>
-            <button
-              onClick={closeCreateActivityModal}
-              className="text-zinc-400"
-            >
-              <LuX className="size-5" />
-            </button>
+    <Dialog.Root
+      open={isCreateActivityModalOpen}
+      onOpenChange={closeCreateActivityModal}
+    >
+      <Dialog.Portal>
+        <Dialog.Overlay className="fixed inset-0 bg-black/60" />
+        <Dialog.Content className="fixed left-1/2 top-1/2 w-full max-w-[640px] -translate-x-1/2 -translate-y-1/2 space-y-5 rounded-xl bg-zinc-900 px-6 py-5 shadow-shape">
+          {/* Header */}
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <Dialog.Title className="text-lg font-semibold">
+                Cadastrar a atividade
+              </Dialog.Title>
+              <Dialog.Close className="text-zinc-400">
+                <LuX className="size-5" />
+              </Dialog.Close>
+            </div>
+
+            <Dialog.Description className="text-sm text-zinc-400">
+              Todos os convidados podem visualizar as atividades
+            </Dialog.Description>
           </div>
 
-          <p className="text-sm text-zinc-400">
-            Todos os convidados podem visualizar as atividades
-          </p>
-        </div>
+          <form onSubmit={createActivity} className="space-y-3">
+            <div className="flex h-14 flex-1 items-center gap-2 rounded-lg border border-zinc-800 bg-zinc-950 px-5">
+              <LuTag className="size-5 text-zinc-400" />
 
-        <form onSubmit={createActivity} className="space-y-3">
-          <div className="flex h-14 flex-1 items-center gap-2 rounded-lg border border-zinc-800 bg-zinc-950 px-5">
-            <LuTag className="size-5 text-zinc-400" />
+              <input
+                name="title"
+                placeholder="Qual a atividade?"
+                className="flex-1 bg-transparent text-lg placeholder-zinc-400"
+              />
+            </div>
 
-            <input
-              name="title"
-              placeholder="Qual a atividade?"
-              className="flex-1 bg-transparent text-lg placeholder-zinc-400"
-            />
-          </div>
+            <div className="flex h-14 flex-1 items-center gap-2 rounded-lg border border-zinc-800 bg-zinc-950 px-5">
+              <LuCalendar className="size-5 text-zinc-400" />
 
-          <div className="flex h-14 flex-1 items-center gap-2 rounded-lg border border-zinc-800 bg-zinc-950 px-5">
-            <LuCalendar className="size-5 text-zinc-400" />
+              <input
+                type="datetime-local"
+                name="occurs_at"
+                placeholder="Data e horário da atividade"
+                className="flex-1 bg-transparent text-lg placeholder-zinc-400"
+              />
+            </div>
 
-            <input
-              type="datetime-local"
-              name="occurs_at"
-              placeholder="Data e horário da atividade"
-              className="flex-1 bg-transparent text-lg placeholder-zinc-400"
-            />
-          </div>
-
-          <Button size="full" type="submit">
-            Salvar atividade
-          </Button>
-        </form>
-      </div>
-    </div>
+            <Button size="full" type="submit">
+              Salvar atividade
+            </Button>
+          </form>
+        </Dialog.Content>
+      </Dialog.Portal>
+    </Dialog.Root>
   )
 }

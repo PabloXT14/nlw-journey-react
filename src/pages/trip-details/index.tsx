@@ -8,7 +8,7 @@ import { Button } from '../../components/button'
 import { useModalStore } from '../../store/modal'
 
 export function TripDetailsPage() {
-  const { isCreateActivityModalOpen, openCreateActivityModal } = useModalStore()
+  const { openCreateActivityModal } = useModalStore()
 
   return (
     <div className="mx-auto max-w-6xl space-y-8 px-6 py-10">
@@ -43,8 +43,7 @@ export function TripDetailsPage() {
         </div>
       </main>
 
-      {/* Create activity modal */}
-      {isCreateActivityModalOpen && <CreateActivityModal />}
+      <CreateActivityModal />
     </div>
   )
 }
