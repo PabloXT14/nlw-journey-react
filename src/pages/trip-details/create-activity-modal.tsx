@@ -5,16 +5,39 @@ import { api } from '../../lib/axios'
 import { useParams } from 'react-router-dom'
 import { useModalStore } from '../../store/modal'
 import { toast } from 'sonner'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Trip } from '../../types/trip'
 
 export const CreateActivityModal = () => {
+  const queryClient = useQueryClient()
   const { closeCreateActivityModal } = useModalStore()
 
   const { tripId } = useParams()
 
   const { data: trip } = useQuery<Trip>({
-    queryKey: ['trip'],
+    queryKey: ['trip', tripId],
+  })
+
+  const { mutateAsync: createActivityMutation } = useMutation({
+    mutationFn: async ({
+      title,
+      occurs_at,
+    }: {
+      title: string
+      occurs_at: string
+    }) => {
+      await api.post(`/trips/${tripId}/activities`, {
+        title,
+        occurs_at,
+      })
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['activities', tripId] })
+
+      toast.success('Atividade criada com sucesso!')
+
+      closeCreateActivityModal()
+    },
   })
 
   async function createActivity(event: FormEvent<HTMLFormElement>) {
@@ -47,14 +70,7 @@ export const CreateActivityModal = () => {
       )
     }
 
-    await api.post(`/trips/${tripId}/activities`, {
-      title,
-      occurs_at,
-    })
-
-    toast.success('Atividade criada com sucesso!')
-
-    window.location.reload()
+    await createActivityMutation({ title, occurs_at })
   }
 
   return (
