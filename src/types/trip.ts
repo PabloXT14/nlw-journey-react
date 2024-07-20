@@ -21,3 +21,10 @@ export type Participant = {
   email: string
   is_confirmed: boolean
 }
+
+export type Link = {
+  id: string
+  title: string
+  url: string
+  trip_id: string
+}

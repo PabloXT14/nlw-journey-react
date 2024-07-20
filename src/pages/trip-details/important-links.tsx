@@ -1,42 +1,50 @@
 import { LuLink2, LuPlus } from 'react-icons/lu'
 import { Button } from '../../components/button'
+import { useParams } from 'react-router-dom'
+import { useQuery } from '@tanstack/react-query'
+import { api } from '../../lib/axios'
+import { Link } from '../../types/trip'
 
 export const ImportanteLinks = () => {
+  const { tripId } = useParams()
+
+  const { data: links } = useQuery<Link[]>({
+    queryKey: ['links', tripId],
+    queryFn: async () => {
+      const response = await api.get(`/trips/${tripId}/links`)
+
+      return response.data.links
+    },
+  })
+
   return (
     <div className="space-y-6">
       <h2 className="text-xl font-semibold">Links importantes</h2>
 
       {/* Links list */}
       <div className="space-y-5">
-        <div className="flex items-center justify-between gap-4">
-          <div className="space-y-1.5">
-            <span className="block font-medium text-zinc-100">
-              Reserva do AirBnB
-            </span>
-            <a
-              href="#"
-              className="block truncate text-xs text-zinc-400 transition-colors hover:text-zinc-200"
-            >
-              https://www.airbnb.com.br/rooms/1234567891234454565867565678756856785454754
-            </a>
+        {links?.length === 0 && (
+          <p className="text-sm text-zinc-500">Nenhum link encontrado</p>
+        )}
+        {links?.map((link) => (
+          <div
+            key={link.id}
+            className="flex items-center justify-between gap-4"
+          >
+            <div className="space-y-1.5">
+              <span className="block font-medium text-zinc-100">
+                {link.title}
+              </span>
+              <a
+                href={link.url}
+                className="block truncate text-xs text-zinc-400 transition-colors hover:text-zinc-200"
+              >
+                {link.url}
+              </a>
+            </div>
+            <LuLink2 className="size-5 shrink-0 text-zinc-400" />
           </div>
-          <LuLink2 className="size-5 shrink-0 text-zinc-400" />
-        </div>
-
-        <div className="flex items-center justify-between gap-4">
-          <div className="space-y-1.5">
-            <span className="block font-medium text-zinc-100">
-              Reserva do AirBnB
-            </span>
-            <a
-              href="#"
-              className="block truncate text-xs text-zinc-400 transition-colors hover:text-zinc-200"
-            >
-              https://www.airbnb.com.br/rooms/1234567891234454565867565678756856785454754
-            </a>
-          </div>
-          <LuLink2 className="size-5 shrink-0 text-zinc-400" />
-        </div>
+        ))}
       </div>
 
       <Button variant="secondary" size="full">
