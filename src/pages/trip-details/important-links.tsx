@@ -4,9 +4,13 @@ import { useParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { api } from '../../lib/axios'
 import { Link } from '../../types/trip'
+import { useModalStore } from '../../store/modal'
+import { CreateLinkModal } from './create-link-modal'
 
 export const ImportanteLinks = () => {
   const { tripId } = useParams()
+
+  const { openCreateLinkModal } = useModalStore()
 
   const { data: links } = useQuery<Link[]>({
     queryKey: ['links', tripId],
@@ -37,7 +41,9 @@ export const ImportanteLinks = () => {
               </span>
               <a
                 href={link.url}
+                target="_blank"
                 className="block truncate text-xs text-zinc-400 transition-colors hover:text-zinc-200"
+                rel="noreferrer"
               >
                 {link.url}
               </a>
@@ -47,10 +53,12 @@ export const ImportanteLinks = () => {
         ))}
       </div>
 
-      <Button variant="secondary" size="full">
+      <Button variant="secondary" size="full" onClick={openCreateLinkModal}>
         <LuPlus className="size-5" />
         Cadastrar novo link
       </Button>
+
+      <CreateLinkModal />
     </div>
   )
 }
