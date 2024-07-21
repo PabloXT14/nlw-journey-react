@@ -6,6 +6,7 @@ type ModalState = {
   isConfirmTripModalOpen: boolean
   isCreateActivityModalOpen: boolean
   isCreateLinkModalOpen: boolean
+  isUpdateTripModalOpen: boolean
   openGuestsInput: () => void
   closeGuestsInput: () => void
   openGuestsModal: () => void
@@ -16,6 +17,8 @@ type ModalState = {
   closeCreateActivityModal: () => void
   openCreateLinkModal: () => void
   closeCreateLinkModal: () => void
+  openUpdateTripModal: () => void
+  closeUpdateTripModal: () => void
 }
 
 export const useModalStore = create<ModalState>((set) => ({
@@ -24,6 +27,7 @@ export const useModalStore = create<ModalState>((set) => ({
   isConfirmTripModalOpen: false,
   isCreateActivityModalOpen: false,
   isCreateLinkModalOpen: false,
+  isUpdateTripModalOpen: false,
   openGuestsInput: () => set({ isGuestsInputOpen: true }),
   closeGuestsInput: () => set({ isGuestsInputOpen: false }),
   openGuestsModal: () => set({ isGuestsModalOpen: true }),
@@ -34,4 +38,6 @@ export const useModalStore = create<ModalState>((set) => ({
   closeCreateActivityModal: () => set({ isCreateActivityModalOpen: false }),
   openCreateLinkModal: () => set({ isCreateLinkModalOpen: true }),
   closeCreateLinkModal: () => set({ isCreateLinkModalOpen: false }),
+  openUpdateTripModal: () => set({ isUpdateTripModalOpen: true }),
+  closeUpdateTripModal: () => set({ isUpdateTripModalOpen: false }),
 }))

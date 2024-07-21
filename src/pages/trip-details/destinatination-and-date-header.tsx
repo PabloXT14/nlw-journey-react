@@ -5,11 +5,14 @@ import { format } from 'date-fns'
 import { useQuery } from '@tanstack/react-query'
 import { Trip } from '../../types/trip'
 import { api } from '../../lib/axios'
+import { useModalStore } from '../../store/modal'
+import { UpdateTripModal } from './update-trip-modal'
 
 export const DestinationAndDateHeader = () => {
   const { tripId } = useParams()
 
-  // eslint-disable-next-line no-empty-pattern
+  const { openUpdateTripModal } = useModalStore()
+
   const { data: trip } = useQuery<Trip>({
     queryKey: ['trip', tripId],
     queryFn: async () => {
@@ -42,11 +45,13 @@ export const DestinationAndDateHeader = () => {
 
         <div className="h-6 w-px bg-zinc-800" />
 
-        <Button variant="secondary">
+        <Button variant="secondary" onClick={openUpdateTripModal}>
           Alterar local/data
           <LuSettings2 className="size-5" />
         </Button>
       </div>
+
+      <UpdateTripModal />
     </div>
   )
 }
