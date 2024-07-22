@@ -1,18 +1,21 @@
 import * as Dialog from '@radix-ui/react-dialog'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { FormEvent } from 'react'
-import { LuCalendar, LuTag, LuX } from 'react-icons/lu'
+import { FormEvent, useState } from 'react'
+import { LuCalendar, LuClock, LuTag, LuX } from 'react-icons/lu'
 import { useParams } from 'react-router-dom'
 import { toast } from 'sonner'
 import { Button } from '../../components/button'
 import { api } from '../../lib/axios'
 import { useModalStore } from '../../store/modal'
 import { Trip } from '../../types/trip'
+import { TimePicker } from '../../components/time-picker'
 
 export const CreateActivityModal = () => {
   const queryClient = useQueryClient()
   const { isCreateActivityModalOpen, closeCreateActivityModal } =
     useModalStore()
+
+  const [time, setTime] = useState('')
 
   const { tripId } = useParams()
 
@@ -41,6 +44,11 @@ export const CreateActivityModal = () => {
       closeCreateActivityModal()
     },
   })
+
+  function handleCloseModal() {
+    setTime('')
+    closeCreateActivityModal()
+  }
 
   async function createActivity(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -78,7 +86,7 @@ export const CreateActivityModal = () => {
   return (
     <Dialog.Root
       open={isCreateActivityModalOpen}
-      onOpenChange={closeCreateActivityModal}
+      onOpenChange={handleCloseModal}
     >
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black/60" />
@@ -110,15 +118,25 @@ export const CreateActivityModal = () => {
               />
             </div>
 
-            <div className="flex h-14 flex-1 items-center gap-2 rounded-lg border border-zinc-800 bg-zinc-950 px-5">
-              <LuCalendar className="size-5 text-zinc-400" />
+            <div className="flex gap-3">
+              <div className="flex h-14 flex-1 items-center gap-2 rounded-lg border border-zinc-800 bg-zinc-950 px-5">
+                <LuCalendar className="size-5 text-zinc-400" />
 
-              <input
-                type="datetime-local"
-                name="occurs_at"
-                placeholder="Data e horário da atividade"
-                className="flex-1 bg-transparent text-lg placeholder-zinc-400"
-              />
+                <input
+                  type="date"
+                  name="occurs_at"
+                  placeholder=""
+                  className="flex-1 bg-transparent text-lg placeholder-zinc-400"
+                />
+              </div>
+
+              <div className="flex h-14 items-center gap-2 rounded-lg border border-zinc-800 bg-zinc-950 px-5">
+                <LuClock className="size-5 text-zinc-400" />
+
+                <TimePicker time={time} setTime={setTime}>
+                  <span>{time || 'Horário'}</span>
+                </TimePicker>
+              </div>
             </div>
 
             <Button size="full" type="submit">
