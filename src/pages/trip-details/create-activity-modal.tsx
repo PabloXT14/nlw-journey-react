@@ -9,15 +9,20 @@ import { api } from '../../lib/axios'
 import { useModalStore } from '../../store/modal'
 import { Trip } from '../../types/trip'
 import { TimePicker } from '../../components/time-picker'
+import { DayPicker } from 'react-day-picker'
+import { format } from 'date-fns'
 
 export const CreateActivityModal = () => {
+  const { tripId } = useParams()
+
   const queryClient = useQueryClient()
   const { isCreateActivityModalOpen, closeCreateActivityModal } =
     useModalStore()
 
+  const [title, setTitle] = useState('')
   const [time, setTime] = useState('')
-
-  const { tripId } = useParams()
+  const [date, setDate] = useState<Date | undefined>()
+  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false)
 
   const { data: trip } = useQuery<Trip>({
     queryKey: ['trip', tripId],
@@ -41,30 +46,41 @@ export const CreateActivityModal = () => {
 
       toast.success('Atividade criada com sucesso!')
 
-      closeCreateActivityModal()
+      handleCloseModal()
     },
   })
 
   function handleCloseModal() {
+    setTitle('')
+    setDate(undefined)
     setTime('')
     closeCreateActivityModal()
+  }
+
+  function openDatePicker() {
+    setIsDatePickerOpen(true)
+  }
+
+  function closeDatePicker() {
+    setIsDatePickerOpen(false)
   }
 
   async function createActivity(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
-    const data = new FormData(event.currentTarget)
-
-    const title = data.get('title')?.toString()
-    const occurs_at = data.get('occurs_at')?.toString()
-
     if (!title) {
       return toast.error('Por favor, preencha o campo de título')
     }
 
-    if (!occurs_at) {
+    if (!date) {
       return toast.error('Por favor, preencha o campo de data')
     }
+
+    if (!time) {
+      return toast.error('Por favor, preencha o campo de hora')
+    }
+
+    const occurs_at = format(new Date(date), 'yyyy-MM-dd') + 'T' + time
 
     if (!trip?.starts_at || !trip?.ends_at) {
       toast.error('Data da viagem não encontrada')
@@ -82,6 +98,8 @@ export const CreateActivityModal = () => {
 
     await createActivityMutation({ title, occurs_at })
   }
+
+  const displayedDate = date ? format(date, "d' de 'LLL") : null
 
   return (
     <Dialog.Root
@@ -108,33 +126,69 @@ export const CreateActivityModal = () => {
           </div>
 
           <form onSubmit={createActivity} className="space-y-3">
+            {/* Title input */}
             <div className="flex h-14 flex-1 items-center gap-2 rounded-lg border border-zinc-800 bg-zinc-950 px-5">
               <LuTag className="size-5 text-zinc-400" />
 
               <input
-                name="title"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
                 placeholder="Qual a atividade?"
                 className="flex-1 bg-transparent text-lg placeholder-zinc-400"
               />
             </div>
 
+            {/* Date and Time input */}
             <div className="flex gap-3">
-              <div className="flex h-14 flex-1 items-center gap-2 rounded-lg border border-zinc-800 bg-zinc-950 px-5">
-                <LuCalendar className="size-5 text-zinc-400" />
+              {/* Date input */}
+              <div className="flex h-14 flex-1 items-center rounded-lg border border-zinc-800 bg-zinc-950 px-5">
+                <button
+                  type="button"
+                  onClick={openDatePicker}
+                  className="flex items-center gap-2"
+                >
+                  <LuCalendar className="size-5 text-zinc-400" />
+                  <span className="flex-1 text-lg text-zinc-400">
+                    {displayedDate || 'Quando?'}
+                  </span>
+                </button>
 
-                <input
-                  type="date"
-                  name="occurs_at"
-                  placeholder=""
-                  className="flex-1 bg-transparent text-lg placeholder-zinc-400"
-                />
+                {/* DatePicker modal */}
+                {isDatePickerOpen && (
+                  <div className="items fixed inset-0 flex items-center justify-center">
+                    <div className="space-y-5 rounded-xl bg-zinc-900 px-6 py-5 shadow-shape">
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <h2 className="text-lg font-semibold">
+                            Selecione a data
+                          </h2>
+                          <button
+                            onClick={closeDatePicker}
+                            className="text-zinc-400"
+                          >
+                            <LuX className="size-5" />
+                          </button>
+                        </div>
+                      </div>
+
+                      <DayPicker
+                        mode="single"
+                        selected={date}
+                        onSelect={setDate}
+                      />
+                    </div>
+                  </div>
+                )}
               </div>
 
+              {/* Time input */}
               <div className="flex h-14 items-center gap-2 rounded-lg border border-zinc-800 bg-zinc-950 px-5">
                 <LuClock className="size-5 text-zinc-400" />
 
                 <TimePicker time={time} setTime={setTime}>
-                  <span>{time || 'Horário'}</span>
+                  <span className="text-lg text-zinc-400">
+                    {time || 'Horário'}
+                  </span>
                 </TimePicker>
               </div>
             </div>
