@@ -4,9 +4,13 @@ import { useParams } from 'react-router-dom'
 import { api } from '../../lib/axios'
 import { useQuery } from '@tanstack/react-query'
 import { Participant } from '../../types/trip'
+import { ConfirmParticipantModal } from './confirm-participant-modal'
+import { useModalStore } from '../../store/modal'
 
 export const Guests = () => {
   const { tripId } = useParams()
+
+  const { openConfirmParticipantModal } = useModalStore()
 
   const { data: participants } = useQuery<Participant[]>({
     queryKey: ['participants', tripId],
@@ -45,10 +49,16 @@ export const Guests = () => {
         ))}
       </div>
 
-      <Button variant="secondary" size="full">
+      <Button
+        variant="secondary"
+        size="full"
+        onClick={openConfirmParticipantModal}
+      >
         <LuUserCog className="size-5" />
         Gerenciar convidados
       </Button>
+
+      <ConfirmParticipantModal />
     </div>
   )
 }
