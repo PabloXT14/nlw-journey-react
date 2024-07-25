@@ -26,7 +26,7 @@ export const ConfirmParticipantModal = () => {
       await api.get(`/participants/${participantId}/confirm`)
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['links', tripId] })
+      queryClient.invalidateQueries({ queryKey: ['participants', tripId] })
 
       toast.success('Participante confirmado com sucesso!')
 
@@ -37,7 +37,25 @@ export const ConfirmParticipantModal = () => {
   async function confirmParticipant(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
-    // TODO: Add validation before submitting
+    const data = new FormData(event.currentTarget)
+
+    const participantEmail = data.get('email')?.toString()
+
+    if (!participantEmail) {
+      return
+    }
+
+    const participant = participants?.find(
+      (participant) => participant.email === participantEmail,
+    )
+
+    if (!participant) {
+      return toast.error('Convidado não encontrado')
+    }
+
+    const { id: participantId } = participant
+
+    await confirmParticipantMutation({ participantId })
   }
 
   return (
